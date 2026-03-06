@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Estatísticas</title>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@6.0.0/dist/echarts.min.js"></script>
+
+</head>
+
+<body>
+
+<h1>Distribuição de Idades</h1>
+<div id="graficoIdade" style="width:900px;height:400px;"></div>
+
+<h1>Distribuição de Nomes</h1>
+<div id="graficoNome" style="width:900px;height:400px;"></div>
+
+<script>
+
+var chartIdade = echarts.init(document.getElementById('graficoIdade'));
+
+var optionIdade = {
+    title:{text:'Distribuição de Idades'},
+    tooltip:{},
+    xAxis:{type:'category'},
+    yAxis:{type:'value'},
+    series:[{
+        type:'bar',
+        data:[
+['18',173],['19',134],['20',173],['21',163],['22',170],['23',172],['24',151],['25',171],['26',154],['27',169],['28',149],['29',157],['30',148],['31',145],['32',140],['33',147],['34',135],['35',160],['36',178],['37',136],['38',156],['39',166],['40',180],['41',167],['42',165],['43',156],['44',171],['45',175],['46',168],['47',170],['48',165],['49',146],['50',165],['51',165],['52',157],['53',153],['54',157],['55',148],['56',145],['57',158],['58',165],['59',154],['60',159],['61',136],['62',168],['63',171],['64',140],['65',160],['66',155],['67',162],['68',166],['69',169],['70',151],['71',176],['72',158],['73',175],['74',155],['75',158],['76',144],['77',139],['78',142],['79',161],['80',178],]
+    }]
+};
+
+chartIdade.setOption(optionIdade);
+
+
+var chartNome = echarts.init(document.getElementById('graficoNome'));
+
+var optionNome = {
+    title:{text:'Distribuição de Nomes'},
+    tooltip:{},
+    series:[{
+        type:'pie',
+        radius:'60%',
+        data:[
+{value:525, name:'Matheus'},{value:449, name:'Larissa'},{value:511, name:'Felipe'},{value:532, name:'Rafael'},{value:541, name:'Isabela'},{value:506, name:'Lucas'},{value:506, name:'Carolina'},{value:514, name:'Leticia'},{value:515, name:'Amanda'},{value:517, name:'Beatriz'},{value:474, name:'Julia'},{value:464, name:'Bruno'},{value:497, name:'Camila'},{value:464, name:'João'},{value:525, name:'Mariana'},{value:483, name:'Ana'},{value:515, name:'Marcos'},{value:467, name:'Pedro'},{value:507, name:'Gabriel'},{value:488, name:'Carlos'},]
+    }]
+};
+
+chartNome.setOption(optionNome);
+
+</script>
+
+</body>
+</html>

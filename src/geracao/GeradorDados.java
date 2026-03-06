@@ -26,7 +26,6 @@ public class GeradorDados {
             long ultimaModificacao = arquivo.lastModified();
             long agora = System.currentTimeMillis();
 
-            // diferença em minutos (só exemplo de critério)
             long diferencaMinutos = (agora - ultimaModificacao) / (1000 * 60);
 
             if (diferencaMinutos > 0) {
@@ -54,16 +53,28 @@ public class GeradorDados {
     private static void gerarArquivo() {
 
         String[] nomes = {
-                "Gabriel", "Lucas", "Matheus", "Pedro", "João",
-                "Marcos", "Felipe", "Bruno", "Carlos", "Rafael",
-                "Ana", "Julia", "Mariana", "Beatriz", "Larissa",
-                "Camila", "Isabela", "Leticia", "Amanda", "Carolina"
+                "Gabriel","Lucas","Matheus","Pedro","João",
+                "Marcos","Felipe","Bruno","Carlos","Rafael",
+                "Ana","Julia","Mariana","Beatriz","Larissa",
+                "Camila","Isabela","Leticia","Amanda","Carolina"
         };
 
         String[] sobrenomes = {
-                "Silva", "Souza", "Oliveira", "Santos", "Lima",
-                "Costa", "Pereira", "Almeida", "Ferreira", "Rodrigues",
-                "Gomes", "Martins", "Rocha", "Barbosa", "Ribeiro"
+                "Silva","Souza","Oliveira","Santos","Lima",
+                "Costa","Pereira","Almeida","Ferreira","Rodrigues",
+                "Gomes","Martins","Rocha","Barbosa","Ribeiro"
+        };
+
+        String[] cidades = {
+                "São Paulo","Curitiba","Florianópolis","Porto Alegre",
+                "Rio de Janeiro","Belo Horizonte","Brasília","Campinas",
+                "Joinville","Blumenau"
+        };
+
+        String[] profissoes = {
+                "Programador","Professor","Engenheiro","Médico",
+                "Designer","Advogado","Enfermeiro","Analista",
+                "Estudante","Arquiteto"
         };
 
         Random random = new Random();
@@ -77,7 +88,23 @@ public class GeradorDados {
                 String sobrenome = sobrenomes[random.nextInt(sobrenomes.length)];
                 int idade = 18 + random.nextInt(63);
 
-                writer.write(nome + " " + sobrenome + ", " + idade);
+                String cidade = cidades[random.nextInt(cidades.length)];
+                String profissao = profissoes[random.nextInt(profissoes.length)];
+
+                double salario = 1000 + random.nextInt(15000);
+                double altura = 1.50 + (random.nextDouble() * 0.50); // 1.50 a 2.00
+                int peso = 50 + random.nextInt(60); // 50 a 110 kg
+
+                writer.write(
+                        nome + " " + sobrenome + "," +
+                        idade + "," +
+                        cidade + "," +
+                        profissao + "," +
+                        salario + "," +
+                        String.format("%.2f", altura) + "," +
+                        peso
+                );
+
                 writer.newLine();
             }
 
