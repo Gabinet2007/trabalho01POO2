@@ -19,9 +19,9 @@ public class LeitorArquivo {
                 int idade = Integer.parseInt(partes[1].trim());
                 String cidade = partes[2].trim();
                 String profissao = partes[3].trim();
-                double salario = Integer.parseInt(partes[4].trim());
-                double altura = Integer.parseInt(partes[5].trim());
-                double peso = Integer.parseInt(partes[6].trim());
+                double salario = Double.parseDouble(partes[4].trim());
+                double altura = Double.parseDouble(partes[5].trim());
+                double peso = Double.parseDouble(partes[6].trim());
 
                 pessoas.add(new Pessoa(nome, idade, cidade, profissao, salario, altura, peso));
             }

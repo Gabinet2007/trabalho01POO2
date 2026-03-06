@@ -20,4 +20,8 @@ public class PessoaBO {
 	public void inserirLista(List<Pessoa> pessoas) {
 		pessoaDAO.inserirLista(pessoas);
 	}
+	
+	public void deletarTudo() {
+		pessoaDAO.deletarTudo();
+	}
 }

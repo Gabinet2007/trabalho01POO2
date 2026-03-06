@@ -2,54 +2,91 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Estatísticas</title>
+<title>Dashboard Estatístico</title>
 
-<script src="https://cdn.jsdelivr.net/npm/echarts@6.0.0/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@6/dist/echarts.min.js"></script>
+
+<style>
+body{
+font-family:Arial;
+margin:40px;
+}
+
+.chart{
+width:900px;
+height:400px;
+margin-bottom:60px;
+}
+</style>
 
 </head>
 
 <body>
 
-<h1>Distribuição de Idades</h1>
-<div id="graficoIdade" style="width:900px;height:400px;"></div>
+<h1>Dashboard Estatístico</h1>
 
-<h1>Distribuição de Nomes</h1>
-<div id="graficoNome" style="width:900px;height:400px;"></div>
+<h2>Distribuição de Idades</h2>
+<div id="idade" class="chart"></div>
+
+<h2>Distribuição de Nomes</h2>
+<div id="nome" class="chart"></div>
+
+<h2>Pessoas por Cidade</h2>
+<div id="cidade" class="chart"></div>
+
+<h2>Pessoas por Profissão</h2>
+<div id="profissao" class="chart"></div>
+
+<h2>Distribuição Salarial</h2>
+<div id="salario" class="chart"></div>
+
+<h2>Distribuição de Altura</h2>
+<div id="altura" class="chart"></div>
+
+<h2>Distribuição de Peso</h2>
+<div id="peso" class="chart"></div>
+
+<h2>Classificação IMC</h2>
+<div id="imc" class="chart"></div>
 
 <script>
 
-var chartIdade = echarts.init(document.getElementById('graficoIdade'));
+function barChart(id,titulo,dados){
 
-var optionIdade = {
-    title:{text:'Distribuição de Idades'},
-    tooltip:{},
-    xAxis:{type:'category'},
-    yAxis:{type:'value'},
-    series:[{
-        type:'bar',
-        data:[
-['18',173],['19',134],['20',173],['21',163],['22',170],['23',172],['24',151],['25',171],['26',154],['27',169],['28',149],['29',157],['30',148],['31',145],['32',140],['33',147],['34',135],['35',160],['36',178],['37',136],['38',156],['39',166],['40',180],['41',167],['42',165],['43',156],['44',171],['45',175],['46',168],['47',170],['48',165],['49',146],['50',165],['51',165],['52',157],['53',153],['54',157],['55',148],['56',145],['57',158],['58',165],['59',154],['60',159],['61',136],['62',168],['63',171],['64',140],['65',160],['66',155],['67',162],['68',166],['69',169],['70',151],['71',176],['72',158],['73',175],['74',155],['75',158],['76',144],['77',139],['78',142],['79',161],['80',178],]
-    }]
+var chart = echarts.init(document.getElementById(id));
+
+var option = {
+title:{text:titulo},
+tooltip:{},
+xAxis:{type:'category'},
+yAxis:{type:'value'},
+series:[{
+type:'bar',
+data:dados
+}]
 };
 
-chartIdade.setOption(optionIdade);
+chart.setOption(option);
+}
 
+function pieChart(id,titulo,dados){
 
-var chartNome = echarts.init(document.getElementById('graficoNome'));
+var chart = echarts.init(document.getElementById(id));
 
-var optionNome = {
-    title:{text:'Distribuição de Nomes'},
-    tooltip:{},
-    series:[{
-        type:'pie',
-        radius:'60%',
-        data:[
-{value:525, name:'Matheus'},{value:449, name:'Larissa'},{value:511, name:'Felipe'},{value:532, name:'Rafael'},{value:541, name:'Isabela'},{value:506, name:'Lucas'},{value:506, name:'Carolina'},{value:514, name:'Leticia'},{value:515, name:'Amanda'},{value:517, name:'Beatriz'},{value:474, name:'Julia'},{value:464, name:'Bruno'},{value:497, name:'Camila'},{value:464, name:'João'},{value:525, name:'Mariana'},{value:483, name:'Ana'},{value:515, name:'Marcos'},{value:467, name:'Pedro'},{value:507, name:'Gabriel'},{value:488, name:'Carlos'},]
-    }]
+var option = {
+title:{text:titulo},
+tooltip:{},
+series:[{
+type:'pie',
+radius:'60%',
+data:dados
+}]
 };
 
-chartNome.setOption(optionNome);
+chart.setOption(option);
+}
 
+barChart('idade','Distribuição de Idades',[['desvio',18.264014885834204],['mediana',49.0],['variancia',333.5742397499734],['media',48.9645],['moda',77.0],]);barChart('cidade','Pessoas por Cidade',[['Brasília',1008],['Curitiba',1054],['Joinville',1030],['São Paulo',987],['Porto Alegre',1032],['Blumenau',993],['Rio de Janeiro',1008],['Belo Horizonte',961],['Florianópolis',927],['Campinas',1000],]);barChart('profissao','Pessoas por Profissão',[['Professor',967],['Programador',972],['Designer',992],['Estudante',1026],['Advogado',1037],['Médico',1078],['Arquiteto',965],['Enfermeiro',999],['Analista',974],['Engenheiro',990],]);barChart('salario','Distribuição Salarial',[['desvio',4325.9015491519485],['mediana',8489.5],['variancia',1.871342421295523E7],['media',8443.6478],['moda',2290.0],]);barChart('altura','Distribuição de Altura',[['desvio',0.1452290707950676],['mediana',1.75],['variancia',0.02109148300399876],['media',1.748114],]);barChart('peso','Distribuição de Peso',[['desvio',17.235582541939518],['mediana',80.0],['variancia',297.0653055600103],['media',79.5538],]);pieChart('nome','Distribuição de Nomes',[{value:500,name:'Larissa'},{value:492,name:'Matheus'},{value:499,name:'Felipe'},{value:474,name:'Rafael'},{value:542,name:'Isabela'},{value:491,name:'Lucas'},{value:534,name:'Carolina'},{value:474,name:'Leticia'},{value:517,name:'Amanda'},{value:501,name:'Beatriz'},{value:497,name:'Julia'},{value:488,name:'Camila'},{value:503,name:'Bruno'},{value:500,name:'João'},{value:496,name:'Mariana'},{value:513,name:'Ana'},{value:504,name:'Marcos'},{value:507,name:'Pedro'},{value:503,name:'Gabriel'},{value:465,name:'Carlos'},]);pieChart('imc','Classificação IMC',[{value:7.380880497417435,name:'desvio'},{value:25.963047941069917,name:'mediana'},{value:54.47739691715704,name:'variancia'},{value:26.590120686991757,name:'media'},]);
 </script>
 
 </body>

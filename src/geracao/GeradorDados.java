@@ -1,38 +1,48 @@
 package geracao;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+
+import com.bo.PessoaBO;
+import com.model.Pessoa;
+
+import service.LeitorArquivo;
 
 public class GeradorDados {
 
     private static final String CAMINHO_ARQUIVO = "src/dados_aleatorios.txt";
+    private static final String CAMINHO_CONTROLE = "src/controle_geracao.txt";
+    
+    public static void gerarDados() {
 
-    public static void main(String[] args) {
-
+    	LeitorArquivo leitor = new LeitorArquivo();
         File arquivo = new File(CAMINHO_ARQUIVO);
+        File controle = new File(CAMINHO_CONTROLE);
+
         Scanner scanner = new Scanner(System.in);
 
         boolean deveGerar = false;
 
-        if (!arquivo.exists()) {
-            System.out.println("Arquivo não existe. Gerando novo arquivo...");
+        if (!arquivo.exists() || !controle.exists()) {
+
+            System.out.println("Arquivo ou controle não existe. Gerando novo arquivo...");
             deveGerar = true;
+
         } else {
 
+            long ultimaGeracao = lerControle(controle);
             long ultimaModificacao = arquivo.lastModified();
-            long agora = System.currentTimeMillis();
 
-            long diferencaMinutos = (agora - ultimaModificacao) / (1000 * 60);
+            if (ultimaGeracao != ultimaModificacao) {
 
-            if (diferencaMinutos > 0) {
-                System.out.println("O arquivo foi modificado desde a última execução.");
+                System.out.println("O arquivo foi alterado desde a última geração.");
                 deveGerar = true;
+
             } else {
-                System.out.print("O arquivo não foi modificado. Deseja gerar novamente? (s/n): ");
+
+                System.out.print("Arquivo não foi alterado. Gerar novamente? (s/n): ");
                 String resposta = scanner.nextLine();
 
                 if (resposta.equalsIgnoreCase("s")) {
@@ -43,11 +53,45 @@ public class GeradorDados {
 
         if (deveGerar) {
             gerarArquivo();
+            PessoaBO pessoaBO = new PessoaBO();
+            pessoaBO.deletarTudo();
+            
+            try {            	
+            	List<Pessoa> pessoas = leitor.ler("src/dados_aleatorios.txt");
+            	
+            	pessoaBO.inserirLista(pessoas);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            
         } else {
             System.out.println("Operação cancelada.");
         }
 
         scanner.close();
+    }
+
+    public static void main(String[] args) {
+    	gerarDados();
+    }
+
+    private static long lerControle(File controle) {
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(controle))) {
+            return Long.parseLong(reader.readLine());
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    private static void salvarControle(long timestamp) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_CONTROLE))) {
+            writer.write(String.valueOf(timestamp));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void gerarArquivo() {
@@ -92,8 +136,8 @@ public class GeradorDados {
                 String profissao = profissoes[random.nextInt(profissoes.length)];
 
                 double salario = 1000 + random.nextInt(15000);
-                double altura = 1.50 + (random.nextDouble() * 0.50); // 1.50 a 2.00
-                int peso = 50 + random.nextInt(60); // 50 a 110 kg
+                double altura = 1.50 + (random.nextDouble() * 0.50);
+                int peso = 50 + random.nextInt(60);
 
                 writer.write(
                         nome + " " + sobrenome + "," +
@@ -113,5 +157,8 @@ public class GeradorDados {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        File arquivo = new File(CAMINHO_ARQUIVO);
+        salvarControle(arquivo.lastModified());
     }
 }

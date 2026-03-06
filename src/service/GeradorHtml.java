@@ -6,82 +6,128 @@ import java.util.Map;
 
 public class GeradorHtml {
 
-    public void gerar(Map<Integer,Integer> idades,
-                      Map<String,Integer> nomes) throws IOException {
+	public void gerar(
+	        Map<String, Double> idades,
+	        Map<String, Integer> nomes,
+	        Map<String, Integer> cidades,
+	        Map<String, Integer> profissoes,
+	        Map<String, Double> salarios,
+	        Map<String, Double> alturas,
+	        Map<String, Double> pesos,
+	        Map<String, Double> imc
+	) throws IOException {
 
-        StringBuilder dadosIdade = new StringBuilder();
-        for (Map.Entry<Integer,Integer> e : idades.entrySet()) {
-            dadosIdade.append("['")
-                      .append(e.getKey())
-                      .append("',")
-                      .append(e.getValue())
-                      .append("],");
-        }
+        String dadosIdade = montarBar(idades);
+        String dadosCidade = montarBar(cidades);
+        String dadosProfissao = montarBar(profissoes);
+        String dadosSalario = montarBar(salarios);
+        String dadosAltura = montarBar(alturas);
+        String dadosPeso = montarBar(pesos);
 
-        StringBuilder dadosNome = new StringBuilder();
-        for (Map.Entry<String,Integer> e : nomes.entrySet()) {
-            dadosNome.append("{value:")
-                     .append(e.getValue())
-                     .append(", name:'")
-                     .append(e.getKey())
-                     .append("'},");
-        }
+        String dadosNome = montarPie(nomes);
+        String dadosImc = montarPie(imc);
 
         String html = """
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Estatísticas</title>
+<title>Dashboard Estatístico</title>
 
-<script src="https://cdn.jsdelivr.net/npm/echarts@6.0.0/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@6/dist/echarts.min.js"></script>
+
+<style>
+body{
+font-family:Arial;
+margin:40px;
+}
+
+.chart{
+width:900px;
+height:400px;
+margin-bottom:60px;
+}
+</style>
 
 </head>
 
 <body>
 
-<h1>Distribuição de Idades</h1>
-<div id="graficoIdade" style="width:900px;height:400px;"></div>
+<h1>Dashboard Estatístico</h1>
 
-<h1>Distribuição de Nomes</h1>
-<div id="graficoNome" style="width:900px;height:400px;"></div>
+<h2>Distribuição de Idades</h2>
+<div id="idade" class="chart"></div>
+
+<h2>Distribuição de Nomes</h2>
+<div id="nome" class="chart"></div>
+
+<h2>Pessoas por Cidade</h2>
+<div id="cidade" class="chart"></div>
+
+<h2>Pessoas por Profissão</h2>
+<div id="profissao" class="chart"></div>
+
+<h2>Distribuição Salarial</h2>
+<div id="salario" class="chart"></div>
+
+<h2>Distribuição de Altura</h2>
+<div id="altura" class="chart"></div>
+
+<h2>Distribuição de Peso</h2>
+<div id="peso" class="chart"></div>
+
+<h2>Classificação IMC</h2>
+<div id="imc" class="chart"></div>
 
 <script>
 
-var chartIdade = echarts.init(document.getElementById('graficoIdade'));
+function barChart(id,titulo,dados){
 
-var optionIdade = {
-    title:{text:'Distribuição de Idades'},
-    tooltip:{},
-    xAxis:{type:'category'},
-    yAxis:{type:'value'},
-    series:[{
-        type:'bar',
-        data:[
-""" + dadosIdade + """
-]
-    }]
+var chart = echarts.init(document.getElementById(id));
+
+var option = {
+title:{text:titulo},
+tooltip:{},
+xAxis:{type:'category'},
+yAxis:{type:'value'},
+series:[{
+type:'bar',
+data:dados
+}]
 };
 
-chartIdade.setOption(optionIdade);
+chart.setOption(option);
+}
 
+function pieChart(id,titulo,dados){
 
-var chartNome = echarts.init(document.getElementById('graficoNome'));
+var chart = echarts.init(document.getElementById(id));
 
-var optionNome = {
-    title:{text:'Distribuição de Nomes'},
-    tooltip:{},
-    series:[{
-        type:'pie',
-        radius:'60%',
-        data:[
-""" + dadosNome + """
-]
-    }]
+var option = {
+title:{text:titulo},
+tooltip:{},
+series:[{
+type:'pie',
+radius:'60%',
+data:dados
+}]
 };
 
-chartNome.setOption(optionNome);
+chart.setOption(option);
+}
 
+""" +
+"barChart('idade','Distribuição de Idades',[" + dadosIdade + "]);" +
+"barChart('cidade','Pessoas por Cidade',[" + dadosCidade + "]);" +
+"barChart('profissao','Pessoas por Profissão',[" + dadosProfissao + "]);" +
+"barChart('salario','Distribuição Salarial',[" + dadosSalario + "]);" +
+"barChart('altura','Distribuição de Altura',[" + dadosAltura + "]);" +
+"barChart('peso','Distribuição de Peso',[" + dadosPeso + "]);" +
+
+"pieChart('nome','Distribuição de Nomes',[" + dadosNome + "]);" +
+"pieChart('imc','Classificação IMC',[" + dadosImc + "]);" +
+"""
+		
 </script>
 
 </body>
@@ -91,5 +137,35 @@ chartNome.setOption(optionNome);
         FileWriter writer = new FileWriter("estatisticas.html");
         writer.write(html);
         writer.close();
+    }
+
+	private String montarBar(Map<?,?> mapa){
+
+	    StringBuilder dados = new StringBuilder();
+
+	    for(Map.Entry<?,?> e : mapa.entrySet()){
+	        dados.append("['")
+	             .append(e.getKey())
+	             .append("',")
+	             .append(e.getValue())
+	             .append("],");
+	    }
+
+	    return dados.toString();
+	}
+
+    private String montarPie(Map<String,?> mapa){
+
+        StringBuilder dados = new StringBuilder();
+
+        for(Map.Entry<String,?> e : mapa.entrySet()){
+            dados.append("{value:")
+                 .append(e.getValue())
+                 .append(",name:'")
+                 .append(e.getKey())
+                 .append("'},");
+        }
+
+        return dados.toString();
     }
 }

@@ -1,12 +1,12 @@
 package main;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import com.model.Pessoa;
 
-import service.GeradorHtml;
-import service.LeitorArquivo;
+import service.*;
 
 public class Main {
 
@@ -14,26 +14,45 @@ public class Main {
 
         LeitorArquivo leitor = new LeitorArquivo();
 
+        EstatisticasIdadeService idadeService = new EstatisticasIdadeService();
+        EstatisticasNomeService nomeService = new EstatisticasNomeService();
+        EstatisticasCidadeService cidadeService = new EstatisticasCidadeService();
+        EstatisticasSalarioService salarioService = new EstatisticasSalarioService();
+        EstatisticasAlturaService alturaService = new EstatisticasAlturaService();
+        EstatisticasPesoService pesoService = new EstatisticasPesoService();
+        EstatisticasProfissaoService profissaoService = new EstatisticasProfissaoService();
+        EstatisticasImcService imcService = new EstatisticasImcService();
+
         try {
 
             List<Pessoa> pessoas = leitor.ler("src/dados_aleatorios.txt");
 
-            Map<Integer,Integer> freqIdade = new HashMap<>();
-            Map<String,Integer> freqNome = new HashMap<>();
+            Map<String, Double> estatIdade = idadeService.calcular(pessoas);
+            Map<String, Double> estatAltura = alturaService.calcular(pessoas);
+            Map<String, Double> estatPeso = pesoService.calcular(pessoas);
+            Map<String, Double> estatSalario = salarioService.calcular(pessoas);
 
-            for (Pessoa p : pessoas) {
-
-                int idade = p.getIdade();
-                freqIdade.put(idade,
-                        freqIdade.getOrDefault(idade,0)+1);
-
-                String nome = p.getPrimeiroNome();
-                freqNome.put(nome,
-                        freqNome.getOrDefault(nome,0)+1);
-            }
+            Map<String, Object> dadosNome = nomeService.calcular(pessoas);
+            
+            Map<String,Integer> freqNome =
+                    (Map<String,Integer>) dadosNome.get("frequencias");
+            
+            Map<String, Integer> freqCidade = cidadeService.calcular(pessoas);
+            Map<String, Integer> freqProfissao = profissaoService.calcular(pessoas);
+            Map<String, Double> estatImc = imcService.calcular(pessoas);
 
             GeradorHtml gerador = new GeradorHtml();
-            gerador.gerar(freqIdade, freqNome);
+
+            gerador.gerar(
+                    estatIdade,
+                    freqNome,
+                    freqCidade,
+                    freqProfissao,
+                    estatSalario,
+                    estatAltura,
+                    estatPeso,
+                    estatImc
+            );
 
             System.out.println("HTML gerado com sucesso!");
 

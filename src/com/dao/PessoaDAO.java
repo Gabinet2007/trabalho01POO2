@@ -78,4 +78,21 @@ public class PessoaDAO {
 			System.out.println("DEBUG: Exception no inserir pessoas: " + e.getMessage());
 		}
 	}
+	
+	public void deletarTudo() {
+
+	    String sql = "DELETE FROM " + TABELA;
+
+	    try (
+	        Connection conn = Conexao.conectar();
+	        PreparedStatement ps = conn.prepareStatement(sql);
+	    ) {
+
+	        ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.out.println("DEBUG: Exception no apagar tudo pessoa: " + e.getMessage());
+	    }
+	}
 }
